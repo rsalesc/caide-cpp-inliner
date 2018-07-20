@@ -34,6 +34,7 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include <iostream>
 
 
 using namespace clang;
@@ -179,6 +180,16 @@ public:
         // Finalize() method that will actually use the information collected by callbacks
         // to remove unused preprocessor code
         ppCallbacks.Finalize();
+
+        // 6. Remove comments
+        //
+        // Will only be able to catch every comment if -fparse-all-comments
+        // is set.
+        {
+          for (RawComment* comment : Ctx.getRawCommentList().getComments()) {
+            smartRewriter->removeRange(comment->getSourceRange());
+          }
+        }
 
         smartRewriter->applyChanges();
 

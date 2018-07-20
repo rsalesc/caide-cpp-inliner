@@ -78,6 +78,7 @@ private:
         if (macro.isWhitelisted)
             return;
 
+        #if 0
         for (const SourceRange& usageRange : macro.usages) {
             if (!rewriter.isPartOfRangeRemoved(usageRange)) {
                 // The usage of the macro has not been removed, so
@@ -85,6 +86,7 @@ private:
                 return;
             }
         }
+        #endif
 
         rewriter.removeRange(macro.definition);
 
@@ -223,9 +225,9 @@ public:
         IfDefClause& clause = activeClauses.back();
         clause.locations.push_back(Loc);
 
-        if (clause.keepAllBranches) {
+        if (clause.keepAllBranches && false) {
             // do nothing
-        } else if (clause.selectedBranch < 0) {
+        } else if (clause.selectedBranch < 0 || true) {
             // remove all branches
             SourceLocation b = changeColumn(clause.locations.front(), 1);
             SourceLocation e = changeColumn(clause.locations.back(), 10000);
@@ -378,4 +380,5 @@ void RemoveInactivePreprocessorBlocks::Endif(SourceLocation Loc, SourceLocation 
 
 }
 }
+
 
